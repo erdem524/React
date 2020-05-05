@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from 'react';
-
-const useFetch = (url) => {
-	const [ data, setData ] = useState(null);
-	const [ loading, setLoading ] = useState(true);
-
-	// Similar to componentDidMount and componentDidUpdate:
-	useEffect(async () => {
-		const response = await fetch(url);
-		const data = await response.json();
-		const [ item ] = data.results;
-		setData(item);
-		setLoading(false);
-	}, []);
-
-	return { data, loading };
-};
-
-export default () => {
-	const [ count, setCount ] = useState(0);
-	const { data, loading } = useFetch('https://api.randomuser.me/');
-
+import React, { useState } from 'react';
+import Button from './Button';
+import FriendProfile from './FriendProfile';
+const Friend = () => {
+	const [ friend, setFriend ] = useState({});
+	const [ isLoading, setLoading ] = useState(false);
+	const [ hasError, setError ] = useState(false);
+	const getFriend = () => {
+		setLoading(true);
+		fetch('https://www.randomuser.me/api?results=1')
+			.then((res) => res.json())
+			.then((data) => {
+				setFriend(data.results[0]);
+				setLoading(false);
+			})
+			.catch((err) => {
+				setError(true);
+				setLoading(false);
+			});
+	};
 	return (
 		<div>
-			<p>You clicked {count} times</p>
-			<button onClick={() => setCount(count + 1)}>Click me</button>
-			{loading ? <div>...loading</div> : <div>{data.name.first}</div>}
+			<Button handles={getFriend} text="Get Friend!" />
+			{isLoading && <p>Loading ....</p>}
+			{friend.name && <FriendProfile friend={friend} />}
+			{hasError && <p>Something went wrong</p>}
 		</div>
 	);
 };
+export default Friend;

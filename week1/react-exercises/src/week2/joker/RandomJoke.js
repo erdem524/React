@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Joke from './Joke';
 
 const RandomJoke = () => {
 	const [ hasError, setErrors ] = useState(false);
@@ -13,13 +14,6 @@ const RandomJoke = () => {
 		fetchData();
 	}, []);
 
-	const sucsees = (
-		<div>
-			<p>{joke.setup}</p>
-			<p>{joke.punchline}</p>
-		</div>
-	);
-
-	return <div>{hasError ? <span>Error </span> : sucsees} </div>;
+	return <div>{hasError ? <span>Error </span> : <Joke joke={joke} />} </div>;
 };
 export default RandomJoke;
